@@ -1,0 +1,121 @@
+#define BOOST_TEST_MODULE mfmat
+
+#include <iostream>
+
+#include <boost/test/unit_test.hpp>
+#include <boost/test/tools/output_test_stream.hpp>
+
+#include <mfsm/detail/type_list.hpp>
+
+namespace but = boost::unit_test;
+
+struct s1 {};
+struct s2 {};
+struct s3 {};
+struct s4 {};
+
+BOOST_AUTO_TEST_SUITE(type_list_test_suite)
+
+BOOST_AUTO_TEST_CASE(test_has_type)
+{
+  using tl_t = mfsm::type_list<s1, s3>;
+  static_assert(mfsm::has_type_v<s1, tl_t>);
+  static_assert(!mfsm::has_type_v<s2, tl_t>);
+  static_assert(mfsm::has_type<s3, tl_t>());
+  static_assert(!mfsm::has_type<s4, tl_t>());
+}
+
+
+BOOST_AUTO_TEST_CASE(test_front_back_pop_back_1)
+{
+  using tl_t = mfsm::type_list<s1>;
+  using f_t = decltype(mfsm::front(tl_t{}));
+  static_assert(std::is_same_v<f_t, s1>);
+  using b_t = decltype(mfsm::back(tl_t{}));
+  static_assert(std::is_same_v<b_t, s1>);
+  using tl_pb_t = decltype(mfsm::pop_back(tl_t{}));
+  static_assert(std::is_same_v<mfsm::type_list<>, tl_pb_t>);
+}
+
+
+BOOST_AUTO_TEST_CASE(test_front_back_pop_back_2)
+{
+  using tl_t = mfsm::type_list<s1, s2, s3, s4>;
+  using f_t = decltype(mfsm::front(tl_t{}));
+  static_assert(std::is_same_v<f_t, s1>);
+  using b_t = decltype(mfsm::back(tl_t{}));
+  static_assert(std::is_same_v<b_t, s4>);
+  using tl_pb_t = decltype(mfsm::pop_back(tl_t{}));
+  static_assert(std::is_same_v<mfsm::type_list<s1, s2, s3>, tl_pb_t>);
+}
+
+
+BOOST_AUTO_TEST_CASE(test_concatenate_1)
+{
+  using tl1 = mfsm::type_list<s1>;
+  using tl2 = mfsm::type_list<s2>;
+  using tl_res = mfsm::type_list<s1, s2>;
+  using tl_cat = decltype(tl1{} + tl2{});
+  static_assert(std::is_same_v<tl_res, tl_cat>);
+}
+
+
+BOOST_AUTO_TEST_CASE(test_concatenate_2)
+{
+  using tl1 = mfsm::type_list<s1, s2>;
+  using tl2 = mfsm::type_list<s3, s4>;
+  using tl_res = mfsm::type_list<s1, s2, s3, s4>;
+  using tl_cat = decltype(tl1{} + tl2{});
+  static_assert(std::is_same_v<tl_res, tl_cat>);
+}
+
+
+BOOST_AUTO_TEST_CASE(test_concatenate_3)
+{
+  using tl1 = mfsm::type_list<s1>;
+  using tl2 = mfsm::type_list<s2>;
+  using tl3 = mfsm::type_list<s3>;
+  using tl4 = mfsm::type_list<s4>;
+  using tl_res = mfsm::type_list<s1, s2, s3, s4>;
+  using tl_cat = decltype(tl1{} + tl2{} + tl3{} + tl4{});
+  static_assert(std::is_same_v<tl_res, tl_cat>);
+}
+
+
+BOOST_AUTO_TEST_CASE(test_unique_1)
+{
+  {
+    using tl_res = mfsm::type_list<>;
+    using tl_unique = decltype(mfsm::unique(tl_res{}));
+    static_assert(std::is_same_v<tl_res, tl_unique>);
+  }
+  {
+    using tl_res = mfsm::type_list<s1>;
+    using tl_unique = decltype(mfsm::unique(tl_res{}));
+    static_assert(std::is_same_v<tl_res, tl_unique>);
+  }
+  {
+    using tl_res = mfsm::type_list<s1, s2>;
+    using tl_unique = decltype(mfsm::unique(tl_res{}));
+    static_assert(std::is_same_v<tl_res, tl_unique>);
+  }
+}
+
+
+BOOST_AUTO_TEST_CASE(test_unique_2)
+{
+  {
+    using tl = mfsm::type_list<s1, s1, s2, s1, s3, s1, s4, s1>;
+    using tl_res = mfsm::type_list<s1, s2, s3, s4>;
+    using tl_unique = decltype(mfsm::unique(tl{}));
+    static_assert(std::is_same_v<tl_res, tl_unique>);
+  }
+  {
+    using tl = mfsm::type_list<s1, s2, s3, s4, s1, s2, s3, s4>;
+    using tl_res = mfsm::type_list<s1, s2, s3, s4>;
+    using tl_unique = decltype(mfsm::unique(tl{}));
+    static_assert(std::is_same_v<tl_res, tl_unique>);
+  }
+}
+
+BOOST_AUTO_TEST_SUITE_END()
