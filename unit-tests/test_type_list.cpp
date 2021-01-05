@@ -26,27 +26,45 @@ BOOST_AUTO_TEST_CASE(test_has_type)
 }
 
 
-BOOST_AUTO_TEST_CASE(test_front_back_pop_back_1)
+BOOST_AUTO_TEST_CASE(test_front_back_pop_1)
 {
   using tl_t = mfsm::type_list<s1>;
   using f_t = decltype(mfsm::front(tl_t{}));
   static_assert(std::is_same_v<f_t, s1>);
   using b_t = decltype(mfsm::back(tl_t{}));
   static_assert(std::is_same_v<b_t, s1>);
+  using tl_pf_t = decltype(mfsm::pop_front(tl_t{}));
+  static_assert(std::is_same_v<mfsm::type_list<>, tl_pf_t>);
   using tl_pb_t = decltype(mfsm::pop_back(tl_t{}));
   static_assert(std::is_same_v<mfsm::type_list<>, tl_pb_t>);
 }
 
 
-BOOST_AUTO_TEST_CASE(test_front_back_pop_back_2)
+BOOST_AUTO_TEST_CASE(test_front_back_pop_2)
 {
   using tl_t = mfsm::type_list<s1, s2, s3, s4>;
   using f_t = decltype(mfsm::front(tl_t{}));
   static_assert(std::is_same_v<f_t, s1>);
   using b_t = decltype(mfsm::back(tl_t{}));
   static_assert(std::is_same_v<b_t, s4>);
+  using tl_pf_t = decltype(mfsm::pop_front(tl_t{}));
+  static_assert(std::is_same_v<mfsm::type_list<s2, s3, s4>, tl_pf_t>);
   using tl_pb_t = decltype(mfsm::pop_back(tl_t{}));
   static_assert(std::is_same_v<mfsm::type_list<s1, s2, s3>, tl_pb_t>);
+}
+
+
+BOOST_AUTO_TEST_CASE(test_get)
+{
+  using tl_t = mfsm::type_list<s1, s2, s3, s4>;
+  using get_0 = decltype(mfsm::get<0>(tl_t{}));
+  static_assert(std::is_same_v<get_0, s1>);
+  using get_1 = decltype(mfsm::get<1>(tl_t{}));
+  static_assert(std::is_same_v<get_1, s2>);
+  using get_2 = decltype(mfsm::get<2>(tl_t{}));
+  static_assert(std::is_same_v<get_2, s3>);
+  using get_3 = decltype(mfsm::get<3>(tl_t{}));
+  static_assert(std::is_same_v<get_3, s4>);
 }
 
 

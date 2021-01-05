@@ -20,6 +20,13 @@ namespace mfsm
 
 
   template <typename HEAD, typename... TAIL>
+  inline constexpr auto pop_front(type_list<HEAD, TAIL...>)
+  {
+    return type_list<TAIL...>{};
+  }
+
+
+  template <typename HEAD, typename... TAIL>
   inline constexpr auto back(type_list<HEAD, TAIL...>)
   {
     if constexpr (sizeof...(TAIL) == 0)
@@ -36,6 +43,17 @@ namespace mfsm
       return type_list<>{};
     else
       return type_list<HEAD>{} + pop_back(type_list<TAIL...>{});
+  }
+
+
+  template <std::size_t N, typename... Ts>
+  inline constexpr auto get(type_list<Ts...>)
+  {
+    static_assert(sizeof...(Ts) > N);
+    if constexpr (N == 0)
+      return front(type_list<Ts...>{});
+    else
+      return get<N - 1>(pop_front(type_list<Ts...>{}));
   }
 
 

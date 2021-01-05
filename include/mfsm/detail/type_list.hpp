@@ -36,6 +36,10 @@ namespace mfsm
   template <typename HEAD, typename... TAIL>
   inline constexpr auto front(type_list<HEAD, TAIL...>);
 
+  /// @return given type_list minus first type
+  template <typename HEAD, typename... TAIL>
+  inline constexpr auto pop_front(type_list<HEAD, TAIL...>);
+
   /// @return back element of type_list
   template <typename HEAD, typename... TAIL>
   inline constexpr auto back(type_list<HEAD, TAIL...>);
@@ -43,6 +47,10 @@ namespace mfsm
   /// @return given type_list minus last type
   template <typename HEAD, typename... TAIL>
   inline constexpr auto pop_back(type_list<HEAD, TAIL...>);
+
+  /// @return type_list's element at index N
+  template <std::size_t N, typename... Ts>
+  inline constexpr auto get(type_list<Ts...>);
 
   /// @return concatenation of two types lists
   template <typename... Ts, typename... Us>
