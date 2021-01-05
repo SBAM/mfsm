@@ -2,32 +2,40 @@ namespace mfsm
 {
 
   template <typename SEARCHED_T, Type_list_c TL>
-  inline constexpr bool has_type()
+  consteval bool has_type()
   {
+    using s_t = std::remove_cvref_t<SEARCHED_T>;
     constexpr auto sub = []<typename... Ts>(type_list<Ts...>)
       {
-        return (std::is_same_v<SEARCHED_T, Ts> || ...);
+        return (std::is_same_v<s_t, Ts> || ...);
       };
     return sub(TL{});
   }
 
 
+  template <typename... Ts>
+  consteval std::size_t length(type_list<Ts...>)
+  {
+    return sizeof...(Ts);
+  }
+
+
   template <typename HEAD, typename... TAIL>
-  inline constexpr auto front(type_list<HEAD, TAIL...>)
+  consteval auto front(type_list<HEAD, TAIL...>)
   {
     return HEAD{};
   }
 
 
   template <typename HEAD, typename... TAIL>
-  inline constexpr auto pop_front(type_list<HEAD, TAIL...>)
+  consteval auto pop_front(type_list<HEAD, TAIL...>)
   {
     return type_list<TAIL...>{};
   }
 
 
   template <typename HEAD, typename... TAIL>
-  inline constexpr auto back(type_list<HEAD, TAIL...>)
+  consteval auto back(type_list<HEAD, TAIL...>)
   {
     if constexpr (sizeof...(TAIL) == 0)
       return HEAD{};
@@ -37,7 +45,7 @@ namespace mfsm
 
 
   template <typename HEAD, typename... TAIL>
-  inline constexpr auto pop_back(type_list<HEAD, TAIL...>)
+  consteval auto pop_back(type_list<HEAD, TAIL...>)
   {
     if constexpr (sizeof...(TAIL) == 0)
       return type_list<>{};
@@ -47,7 +55,7 @@ namespace mfsm
 
 
   template <std::size_t N, typename... Ts>
-  inline constexpr auto get(type_list<Ts...>)
+  consteval auto get(type_list<Ts...>)
   {
     static_assert(sizeof...(Ts) > N);
     if constexpr (N == 0)
@@ -57,15 +65,30 @@ namespace mfsm
   }
 
 
+  template <typename SEARCHED_T, Type_list_c TL, std::size_t N>
+  consteval std::size_t reverse_get(TL)
+  {
+    using s_t = std::remove_cvref_t<SEARCHED_T>;
+    using f_t = decltype(front(TL{}));
+    if constexpr (std::is_same_v<s_t, f_t>)
+      return N;
+    else
+    {
+      using pf_t = decltype(pop_front(TL{}));
+      return reverse_get<s_t, pf_t, N + 1>(pf_t{});
+    }
+  }
+
+
   template <typename... Ts, typename... Us>
-  inline constexpr auto operator+(type_list<Ts...>, type_list<Us...>)
+  consteval auto operator+(type_list<Ts...>, type_list<Us...>)
   {
     return type_list<Ts..., Us...>{};
   }
 
 
   template <typename... Ts>
-  inline constexpr auto unique(type_list<Ts...>)
+  consteval auto unique(type_list<Ts...>)
   {
     if constexpr (sizeof...(Ts) <= 1)
       return type_list<Ts...>{};

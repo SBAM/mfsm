@@ -26,6 +26,19 @@ BOOST_AUTO_TEST_CASE(test_has_type)
 }
 
 
+BOOST_AUTO_TEST_CASE(test_length)
+{
+  using tl1_t = mfsm::type_list<>;
+  static_assert(mfsm::length(tl1_t{}) == 0);
+  using tl2_t = mfsm::type_list<s1>;
+  static_assert(mfsm::length(tl2_t{}) == 1);
+  using tl3_t = mfsm::type_list<s1, s2>;
+  static_assert(mfsm::length(tl3_t{}) == 2);
+  using tl4_t = mfsm::type_list<s1, s2, s3>;
+  static_assert(mfsm::length(tl4_t{}) == 3);
+}
+
+
 BOOST_AUTO_TEST_CASE(test_front_back_pop_1)
 {
   using tl_t = mfsm::type_list<s1>;
@@ -65,6 +78,16 @@ BOOST_AUTO_TEST_CASE(test_get)
   static_assert(std::is_same_v<get_2, s3>);
   using get_3 = decltype(mfsm::get<3>(tl_t{}));
   static_assert(std::is_same_v<get_3, s4>);
+}
+
+
+BOOST_AUTO_TEST_CASE(test_reverse_get)
+{
+  using tl_t = mfsm::type_list<s1, s2, s3, s4, s1, s2, s3, s4>;
+  static_assert(mfsm::reverse_get<s1>(tl_t{}) == 0);
+  static_assert(mfsm::reverse_get<s2>(tl_t{}) == 1);
+  static_assert(mfsm::reverse_get<s3>(tl_t{}) == 2);
+  static_assert(mfsm::reverse_get<s4>(tl_t{}) == 3);
 }
 
 

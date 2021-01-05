@@ -26,39 +26,47 @@ namespace mfsm
 
   /// @return true if SEARCHED_T is present in type_list TL
   template <typename SEARCHED_T, Type_list_c TL>
-  inline constexpr bool has_type();
+  consteval bool has_type();
 
   /// @brief shorthand to corresponding has_type result
   template <typename... Ts>
-  inline constexpr bool has_type_v = has_type<Ts...>();
+  constexpr bool has_type_v = has_type<Ts...>();
+
+  /// @return given type_list's length
+  template <typename... Ts>
+  consteval std::size_t length(type_list<Ts...>);
 
   /// @return front element of type_list
   template <typename HEAD, typename... TAIL>
-  inline constexpr auto front(type_list<HEAD, TAIL...>);
+  consteval auto front(type_list<HEAD, TAIL...>);
 
   /// @return given type_list minus first type
   template <typename HEAD, typename... TAIL>
-  inline constexpr auto pop_front(type_list<HEAD, TAIL...>);
+  consteval auto pop_front(type_list<HEAD, TAIL...>);
 
   /// @return back element of type_list
   template <typename HEAD, typename... TAIL>
-  inline constexpr auto back(type_list<HEAD, TAIL...>);
+  consteval auto back(type_list<HEAD, TAIL...>);
 
   /// @return given type_list minus last type
   template <typename HEAD, typename... TAIL>
-  inline constexpr auto pop_back(type_list<HEAD, TAIL...>);
+  consteval auto pop_back(type_list<HEAD, TAIL...>);
 
   /// @return type_list's element at index N
   template <std::size_t N, typename... Ts>
-  inline constexpr auto get(type_list<Ts...>);
+  consteval auto get(type_list<Ts...>);
+
+  /// @return SEARCHED_T's index from given type_list
+  template <typename SEARCHED_T, Type_list_c TL, std::size_t N = 0>
+  consteval std::size_t reverse_get(TL);
 
   /// @return concatenation of two types lists
   template <typename... Ts, typename... Us>
-  inline constexpr auto operator+(type_list<Ts...>, type_list<Us...>);
+  consteval auto operator+(type_list<Ts...>, type_list<Us...>);
 
   /// @return given type_list with duplicate types removed
   template <typename... Ts>
-  inline constexpr auto unique(type_list<Ts...>);
+  consteval auto unique(type_list<Ts...>);
 
 } // !namespace mfsm
 
