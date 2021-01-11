@@ -54,6 +54,12 @@ function invoke_cmake
 {
   DEBUGDIR=$BASEDIR/build/Debug
   RELEASEDIR=$BASEDIR/build/Release
+  case $COMPILER in
+    clang)
+      export CXX=$(which clang++) ;;
+    gcc)
+      export CXX=$(which g++) ;;
+  esac
   TOOLCHAIN_FILE=Toolchain.cmake
   shift
   cmake_config $DEBUGDIR \

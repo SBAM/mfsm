@@ -2,9 +2,18 @@
 # define MFSM_DETAIL_ROW_HPP_
 
 # include "type_list.hpp"
+# include "special_structs.hpp"
 
 namespace mfsm
 {
+
+  template <typename T, typename... Ts>
+  concept Guard_c = std::same_as<T, none> ||
+    requires (T guard, Ts&&... args)
+    {
+      { guard(std::forward<Ts>(args)...) } -> std::same_as<bool>;
+    };
+
 
   template <typename S, typename E, typename N, typename A, typename G>
   struct row
