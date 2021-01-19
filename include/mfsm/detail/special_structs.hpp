@@ -4,11 +4,11 @@
 namespace mfsm
 {
 
-  /**
-   * @brief This structure is used as a substitute to a required concept and
-   *        is expected to behave as a default, for example an empty guard.
-   */
+  /// @brief Used as an empty guard (always return true)
   struct none {};
+
+  /// @brief Used as an action that queues event for later processing
+  struct defer {};
 
 } // !namespace mfsm
 

@@ -7,14 +7,6 @@
 namespace mfsm
 {
 
-  template <typename T, typename... Ts>
-  concept Guard_c = std::same_as<T, none> ||
-    requires (T guard, Ts&&... args)
-    {
-      { guard(std::forward<Ts>(args)...) } -> std::same_as<bool>;
-    };
-
-
   template <typename S, typename E, typename N, typename A, typename G>
   struct row
   {
@@ -37,8 +29,36 @@ namespace mfsm
   template <typename T>
   concept Row_c = is_row_v<T>;
 
+
+  template <typename R, typename SM>
+  concept Row_action_c = Row_c<R> &&
+    (std::same_as<typename R::guard_t, defer> ||
+     requires (const typename R::start_t& start,
+               const typename R::event_t& event,
+               const typename R::next_t& next,
+               typename R::action_t action,
+               SM& sm)
+     {
+       action(event, sm, start, next);
+     });
+
+  template <typename R, typename SM>
+  concept Row_guard_c = Row_c<R> &&
+    (std::same_as<typename R::guard_t, none> ||
+     requires (const typename R::start_t& start,
+               const typename R::event_t& event,
+               const typename R::next_t& next,
+               typename R::guard_t guard,
+               SM& sm)
+     {
+       { guard(event, sm, start, next) } -> std::same_as<bool>;
+     });
+
   template <Row_c... Rs>
-  inline constexpr auto make_unique_states_tl();
+  consteval auto make_unique_states_tl();
+
+  template <typename EVT, Row_c... Rs>
+  consteval auto filter_by_event(type_list<Rs...>);
 
 } // !namespace mfsm
 

@@ -56,11 +56,12 @@ function invoke_cmake
   RELEASEDIR=$BASEDIR/build/Release
   case $COMPILER in
     clang)
-      export CXX=$(which clang++) ;;
+      export CXX=$(which clang++)
+      export TOOLCHAIN_FILE=ClangToolchain.cmake ;;
     gcc)
-      export CXX=$(which g++) ;;
+      export CXX=$(which g++)
+      export TOOLCHAIN_FILE=GNUToolchain.cmake ;;
   esac
-  TOOLCHAIN_FILE=Toolchain.cmake
   shift
   cmake_config $DEBUGDIR \
                -DCMAKE_BUILD_TYPE=Debug \
