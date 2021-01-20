@@ -32,7 +32,7 @@ namespace mfsm
 
   template <typename R, typename SM>
   concept Row_action_c = Row_c<R> &&
-    (std::same_as<typename R::guard_t, defer> ||
+    (std::same_as<typename R::action_t, defer> ||
      requires (const typename R::start_t& start,
                const typename R::event_t& event,
                const typename R::next_t& next,
@@ -54,8 +54,18 @@ namespace mfsm
        { guard(event, sm, start, next) } -> std::same_as<bool>;
      });
 
+  /// @return true if defer action is present in rows list Rs
+  template <Row_c... Rs>
+  consteval bool has_defer();
+
   template <Row_c... Rs>
   consteval auto make_unique_states_tl();
+
+  template <Row_c... Rs>
+  consteval auto make_unique_events_tl();
+
+  template <Row_c... Rs>
+  consteval auto make_variant_events();
 
   template <typename EVT, Row_c... Rs>
   consteval auto filter_by_event(type_list<Rs...>);

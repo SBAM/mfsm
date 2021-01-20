@@ -37,6 +37,8 @@ BOOST_AUTO_TEST_CASE(local_types)
   static_assert(std::is_same_v<ttt::rows_tl, mfsm::type_list<r1, r2>>);
   static_assert(mfsm::length(ttt::states_tl{}) == 2);
   static_assert(std::is_same_v<ttt::states_tl, mfsm::type_list<state1, state2>>);
+  static_assert(mfsm::length(ttt::events_tl{}) == 2);
+  static_assert(std::is_same_v<ttt::events_tl, mfsm::type_list<evt2, evt1>>);
 }
 
 BOOST_AUTO_TEST_CASE(type_filtering)
@@ -60,6 +62,17 @@ BOOST_AUTO_TEST_CASE(action_invokable)
   static_assert(mfsm::Row_action_c<r2, int>);
   static_assert(mfsm::Row_action_c<r2, dummy>);
   static_assert(ttt::is_valid<int>());
+}
+
+BOOST_AUTO_TEST_CASE(defer_actions)
+{
+  static_assert(!ttt::has_defer_v);
+  static_assert(std::is_same_v<ttt::events_var, std::variant<std::monostate>>);
+  using r3 = mfsm::row<state2, evt2, state2, mfsm::defer, mfsm::none>;
+  using ttt2 = mfsm::transition_table<r1, r2, r3>;
+  static_assert(ttt2::has_defer_v);
+  using res_var = std::variant<std::monostate, evt2, evt1>;
+  static_assert(std::is_same_v<ttt2::events_var, res_var>);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
