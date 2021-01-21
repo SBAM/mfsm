@@ -23,7 +23,11 @@ namespace mfsm
   template <typename HEAD, typename... TAIL>
   consteval auto front(type_list<HEAD, TAIL...>)
   {
-    return HEAD{};
+    struct res_t
+    {
+      using type [[maybe_unused]] = HEAD;
+    };
+    return res_t{};
   }
 
 
@@ -38,7 +42,13 @@ namespace mfsm
   consteval auto back(type_list<HEAD, TAIL...>)
   {
     if constexpr (sizeof...(TAIL) == 0)
-      return HEAD{};
+    {
+      struct res_t
+      {
+        using type [[maybe_unused]] = HEAD;
+      };
+      return res_t{};
+    }
     else
       return back(type_list<TAIL...>{});
   }
@@ -69,7 +79,7 @@ namespace mfsm
   consteval std::size_t reverse_get(TL)
   {
     using s_t = std::remove_cvref_t<SEARCHED_T>;
-    using f_t = decltype(front(TL{}));
+    using f_t = typename decltype(front(TL{}))::type;
     if constexpr (std::is_same_v<s_t, f_t>)
       return N;
     else
@@ -95,7 +105,7 @@ namespace mfsm
     else
     {
       using pb_t = decltype(pop_back(type_list<Ts...>{}));
-      using b_t = decltype(back(type_list<Ts...>{}));
+      using b_t = typename decltype(back(type_list<Ts...>{}))::type;
       if constexpr (has_type<b_t, pb_t>())
         return unique(pb_t{});
       else

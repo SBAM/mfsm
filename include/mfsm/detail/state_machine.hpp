@@ -18,9 +18,9 @@ namespace mfsm
 
   template <typename SM, typename EVT>
   concept Has_no_transition_c = ValidStateMachineDefinition_c<SM> &&
-    requires (SM& sm, EVT event, std::size_t state)
+    requires (SM& sm, EVT&& event, std::size_t state)
     {
-      sm.no_transition(event, state);
+      sm.no_transition(std::forward<EVT>(event), state);
     };
 
 

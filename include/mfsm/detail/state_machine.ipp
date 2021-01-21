@@ -31,7 +31,7 @@ namespace mfsm
   bool state_machine<T>::match_event(EVT&& evt)
   {
     using evt_t = std::remove_cvref_t<EVT>;
-    using row_t = decltype(front(TL{}));
+    using row_t = typename decltype(front(TL{}))::type;
     using start_t = typename row_t::start_t;
     constexpr auto start_idx = reverse_get<start_t>(states_tl{});
     if (state_ == start_idx)
@@ -39,7 +39,7 @@ namespace mfsm
       if constexpr (std::is_same_v<typename row_t::guard_t, none>)
         return invoke_or_defer_action<row_t>(std::forward<EVT>(evt));
       else
-        if (invoke_guard(evt, row_t{}))
+        if (invoke_guard<row_t>(evt))
           return invoke_or_defer_action<row_t>(std::forward<EVT>(evt));
     }
     if constexpr (length(TL{}) == 1)
@@ -51,7 +51,7 @@ namespace mfsm
     else
     {
       using pf_tl = decltype(pop_front(TL{}));
-      return match_event<pf_tl>(evt);
+      return match_event<pf_tl>(std::forward<EVT>(evt));
     }
   }
 
@@ -106,7 +106,7 @@ namespace mfsm
   template <Type_list_c TL, typename EVT>
   bool state_machine<T>::match_deferred_event(EVT&& evt)
   {
-    using row_t = decltype(front(TL{}));
+    using row_t = typename decltype(front(TL{}))::type;
     using start_t = typename row_t::start_t;
     constexpr auto start_idx = reverse_get<start_t>(states_tl{});
     if (state_ == start_idx)
@@ -114,7 +114,7 @@ namespace mfsm
       if constexpr (std::is_same_v<typename row_t::guard_t, none>)
         return invoke_action<row_t>(std::forward<EVT>(evt));
       else
-        if (invoke_guard(evt, row_t{}))
+        if (invoke_guard<row_t>(evt))
           return invoke_action<row_t>(std::forward<EVT>(evt));
     }
     if constexpr (length(TL{}) == 1)
@@ -122,7 +122,7 @@ namespace mfsm
     else
     {
       using pf_tl = decltype(pop_front(TL{}));
-      return match_deferred_event<pf_tl>(evt);
+      return match_deferred_event<pf_tl>(std::forward<EVT>(evt));
     }
   }
 

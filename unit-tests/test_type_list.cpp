@@ -42,9 +42,9 @@ BOOST_AUTO_TEST_CASE(test_length)
 BOOST_AUTO_TEST_CASE(test_front_back_pop_1)
 {
   using tl_t = mfsm::type_list<s1>;
-  using f_t = decltype(mfsm::front(tl_t{}));
+  using f_t = decltype(mfsm::front(tl_t{}))::type;
   static_assert(std::is_same_v<f_t, s1>);
-  using b_t = decltype(mfsm::back(tl_t{}));
+  using b_t = decltype(mfsm::back(tl_t{}))::type;
   static_assert(std::is_same_v<b_t, s1>);
   using tl_pf_t = decltype(mfsm::pop_front(tl_t{}));
   static_assert(std::is_same_v<mfsm::type_list<>, tl_pf_t>);
@@ -56,9 +56,9 @@ BOOST_AUTO_TEST_CASE(test_front_back_pop_1)
 BOOST_AUTO_TEST_CASE(test_front_back_pop_2)
 {
   using tl_t = mfsm::type_list<s1, s2, s3, s4>;
-  using f_t = decltype(mfsm::front(tl_t{}));
+  using f_t = decltype(mfsm::front(tl_t{}))::type;
   static_assert(std::is_same_v<f_t, s1>);
-  using b_t = decltype(mfsm::back(tl_t{}));
+  using b_t = decltype(mfsm::back(tl_t{}))::type;
   static_assert(std::is_same_v<b_t, s4>);
   using tl_pf_t = decltype(mfsm::pop_front(tl_t{}));
   static_assert(std::is_same_v<mfsm::type_list<s2, s3, s4>, tl_pf_t>);
@@ -70,13 +70,13 @@ BOOST_AUTO_TEST_CASE(test_front_back_pop_2)
 BOOST_AUTO_TEST_CASE(test_get)
 {
   using tl_t = mfsm::type_list<s1, s2, s3, s4>;
-  using get_0 = decltype(mfsm::get<0>(tl_t{}));
+  using get_0 = decltype(mfsm::get<0>(tl_t{}))::type;
   static_assert(std::is_same_v<get_0, s1>);
-  using get_1 = decltype(mfsm::get<1>(tl_t{}));
+  using get_1 = decltype(mfsm::get<1>(tl_t{}))::type;
   static_assert(std::is_same_v<get_1, s2>);
-  using get_2 = decltype(mfsm::get<2>(tl_t{}));
+  using get_2 = decltype(mfsm::get<2>(tl_t{}))::type;
   static_assert(std::is_same_v<get_2, s3>);
-  using get_3 = decltype(mfsm::get<3>(tl_t{}));
+  using get_3 = decltype(mfsm::get<3>(tl_t{}))::type;
   static_assert(std::is_same_v<get_3, s4>);
 }
 
@@ -177,8 +177,8 @@ BOOST_AUTO_TEST_CASE(test_remove)
   {
     using tl = mfsm::type_list<s1, s2, s3, s4>;
     using tl_res = mfsm::type_list<s1, s3>;
-    using tl_unique = decltype(mfsm::remove<s2>(mfsm::remove<s4>(tl{})));
-    static_assert(std::is_same_v<tl_res, tl_unique>);
+    using tl_rem = decltype(mfsm::remove<s2>(mfsm::remove<s4>(tl{})));
+    static_assert(std::is_same_v<tl_res, tl_rem>);
   }
 }
 

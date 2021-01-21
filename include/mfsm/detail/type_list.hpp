@@ -36,7 +36,7 @@ namespace mfsm
   template <typename... Ts>
   consteval std::size_t length(type_list<Ts...>);
 
-  /// @return front element of type_list
+  /// @return struct with member `type' aliasing front element of type_list
   template <typename HEAD, typename... TAIL>
   consteval auto front(type_list<HEAD, TAIL...>);
 
@@ -44,7 +44,7 @@ namespace mfsm
   template <typename HEAD, typename... TAIL>
   consteval auto pop_front(type_list<HEAD, TAIL...>);
 
-  /// @return back element of type_list
+  /// @return struct with member `type' aliasing back element of type_list
   template <typename HEAD, typename... TAIL>
   consteval auto back(type_list<HEAD, TAIL...>);
 
