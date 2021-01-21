@@ -32,7 +32,7 @@ namespace mfsm
       using ue_tl = decltype(make_unique_events_tl<Rs...>());
       constexpr auto sub = []<typename... Ts>(type_list<Ts...>)
         {
-          return std::variant<std::monostate, Ts...>{};
+          return std::variant<Ts...>{};
         };
       return sub(ue_tl{});
     }

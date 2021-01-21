@@ -64,14 +64,14 @@ BOOST_AUTO_TEST_CASE(action_invokable)
   static_assert(ttt::is_valid<int>());
 }
 
-BOOST_AUTO_TEST_CASE(defer_actions)
+BOOST_AUTO_TEST_CASE(defer_utilities)
 {
   static_assert(!ttt::has_defer_v);
   static_assert(std::is_same_v<ttt::events_var, std::variant<std::monostate>>);
   using r3 = mfsm::row<state2, evt2, state2, mfsm::defer, mfsm::none>;
   using ttt2 = mfsm::transition_table<r1, r2, r3>;
   static_assert(ttt2::has_defer_v);
-  using res_var = std::variant<std::monostate, evt2, evt1>;
+  using res_var = std::variant<evt2, evt1>;
   static_assert(std::is_same_v<ttt2::events_var, res_var>);
 }
 

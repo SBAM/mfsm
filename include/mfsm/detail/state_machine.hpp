@@ -1,12 +1,12 @@
 #ifndef MFSM_DETAIL_STATE_MACHINE_HPP_
 # define MFSM_DETAIL_STATE_MACHINE_HPP_
 
-# include "transition_table.hpp"
+# include "defer_queue.hpp"
 
 namespace mfsm
 {
 
-  template<typename T>
+  template <typename T>
   concept ValidStateMachineDefinition_c =
     // state_machine needs to provide a valid transition_table
     TransitionTable_c<typename T::transition_table_t> &&
@@ -16,8 +16,18 @@ namespace mfsm
                typename T::transition_table_t::states_tl>;
 
 
+  template <typename SM, typename EVT>
+  concept Has_no_transition_c = ValidStateMachineDefinition_c<SM> &&
+    requires (SM& sm, EVT event, std::size_t state)
+    {
+      sm.no_transition(event, state);
+    };
+
+
   template <ValidStateMachineDefinition_c T>
-  class state_machine : public T
+  class state_machine :
+    public T,
+    protected defer_queue<typename T::transition_table_t>
   {
   public:
     using sm_t = state_machine<T>;
@@ -25,6 +35,7 @@ namespace mfsm
     using transition_table_t = typename T::transition_table_t;
     using rows_tl = typename transition_table_t::rows_tl;
     using states_tl = typename transition_table_t::states_tl;
+    using dq_t = defer_queue<transition_table_t>;
 
   public:
     template <typename... Args>
@@ -37,8 +48,28 @@ namespace mfsm
     inline std::size_t get_state() const;
 
   private:
-    template <typename EVT, Type_list_c TL>
-    bool process_event_match(const EVT& evt, TL);
+    /// @return true if processing was successful (queue can be popped)
+    template <Type_list_c TL, typename EVT>
+    bool match_event(EVT&& evt);
+
+    /// @return true if evt was processed, false if evt was queued
+    template <Row_c R, typename EVT>
+    bool invoke_or_defer_action(EVT&& evt);
+
+    /// @return transition's guard result
+    template <Row_c R, typename EVT>
+    bool invoke_guard(const EVT& evt);
+
+    /// @return true if dequeuing was successful
+    bool process_event_deferred();
+
+    /// @return true if evt was processed
+    template <Type_list_c TL, typename EVT>
+    bool match_deferred_event(EVT&& evt);
+
+    /// @return true if evt was processed
+    template <Row_c R, typename EVT>
+    bool invoke_action(EVT&& evt);
 
   private:
     std::size_t state_; ///< current state

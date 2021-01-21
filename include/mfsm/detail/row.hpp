@@ -33,9 +33,9 @@ namespace mfsm
   template <typename R, typename SM>
   concept Row_action_c = Row_c<R> &&
     (std::same_as<typename R::action_t, defer> ||
-     requires (const typename R::start_t& start,
-               const typename R::event_t& event,
-               const typename R::next_t& next,
+     requires (typename R::start_t start,
+               typename R::event_t event,
+               typename R::next_t next,
                typename R::action_t action,
                SM& sm)
      {
@@ -45,9 +45,9 @@ namespace mfsm
   template <typename R, typename SM>
   concept Row_guard_c = Row_c<R> &&
     (std::same_as<typename R::guard_t, none> ||
-     requires (const typename R::start_t& start,
+     requires (typename R::start_t start,
                const typename R::event_t& event,
-               const typename R::next_t& next,
+               typename R::next_t next,
                typename R::guard_t guard,
                SM& sm)
      {
