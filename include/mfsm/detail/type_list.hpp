@@ -68,6 +68,10 @@ namespace mfsm
   template <typename... Ts>
   consteval auto unique(type_list<Ts...>);
 
+  /// @return given type_list without given REM_T
+  template <typename REM_T, typename... Ts>
+  consteval auto remove(type_list<Ts...>);
+
 } // !namespace mfsm
 
 # include "type_list.ipp"

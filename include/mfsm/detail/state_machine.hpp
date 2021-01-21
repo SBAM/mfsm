@@ -24,6 +24,10 @@ namespace mfsm
     };
 
 
+  /**
+   * @todo Improve encapsulation and hide internal methods in a `back'
+   *       state_machine class.
+   */
   template <ValidStateMachineDefinition_c T>
   class state_machine :
     public T,

@@ -103,4 +103,25 @@ namespace mfsm
     }
   }
 
+
+  template <typename REM_T, typename... Ts>
+  consteval auto remove(type_list<Ts...>)
+  {
+    if constexpr (sizeof...(Ts) == 0)
+      return type_list<>{};
+    else
+    {
+      constexpr auto sub_remove =
+        []<typename HEAD, typename... TAIL>(type_list<HEAD, TAIL...>)
+          {
+            using r_t = std::remove_cvref_t<REM_T>;
+            if constexpr (std::is_same_v<r_t, HEAD>)
+              return remove<r_t>(type_list<TAIL...>{});
+            else
+              return type_list<HEAD>{} + remove<r_t>(type_list<TAIL...>{});
+          };
+      return sub_remove(type_list<Ts...>{});
+    }
+  }
+
 } // !namespace mfsm

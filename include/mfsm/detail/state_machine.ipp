@@ -61,6 +61,7 @@ namespace mfsm
   bool state_machine<T>::invoke_or_defer_action(EVT&& evt)
   {
     if constexpr (std::is_same_v<typename R::action_t, defer>)
+      /// @note next state is ignored when event is deferred
       dq_t::queue_.push(std::forward<EVT>(evt));
     else
     {

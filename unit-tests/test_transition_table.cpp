@@ -68,9 +68,18 @@ BOOST_AUTO_TEST_CASE(defer_utilities)
 {
   static_assert(!ttt::has_defer_v);
   static_assert(std::is_same_v<ttt::events_var, std::variant<std::monostate>>);
+  // ttt2
   using r3 = mfsm::row<state2, evt2, state2, mfsm::defer, mfsm::none>;
   using ttt2 = mfsm::transition_table<r1, r2, r3>;
   static_assert(ttt2::has_defer_v);
+  using res_var = std::variant<evt2, evt1>;
+  static_assert(std::is_same_v<ttt2::events_var, res_var>);
+  // ttt3
+  using r4 = mfsm::row<state1, evt1, mfsm::none, mfsm::defer, mfsm::none>;
+  using ttt3 = mfsm::transition_table<r1, r2, r3, r4>;
+  static_assert(mfsm::length(ttt3::events_tl{}) == 2);
+  static_assert(std::is_same_v<ttt3::events_tl, mfsm::type_list<evt2, evt1>>);
+  static_assert(ttt3::has_defer_v);
   using res_var = std::variant<evt2, evt1>;
   static_assert(std::is_same_v<ttt2::events_var, res_var>);
 }

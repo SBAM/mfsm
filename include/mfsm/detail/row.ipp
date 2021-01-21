@@ -11,8 +11,8 @@ namespace mfsm
   template <Row_c... Rs>
   consteval auto make_unique_states_tl()
   {
-    return unique(type_list<typename Rs::start_t...>{} +
-                  type_list<typename Rs::next_t...>{});
+    return unique(remove<none>(type_list<typename Rs::start_t...>{} +
+                               type_list<typename Rs::next_t...>{}));
   }
 
 

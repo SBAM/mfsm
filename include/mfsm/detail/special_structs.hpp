@@ -4,7 +4,7 @@
 namespace mfsm
 {
 
-  /// @brief Used as an empty guard (always return true)
+  /// @brief Used as an empty guard that would always evaluate to true
   struct none {};
 
   /// @brief Used as an action that queues event for later processing

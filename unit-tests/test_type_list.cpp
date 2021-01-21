@@ -159,4 +159,27 @@ BOOST_AUTO_TEST_CASE(test_unique_2)
   }
 }
 
+
+BOOST_AUTO_TEST_CASE(test_remove)
+{
+  {
+    using tl = mfsm::type_list<>;
+    using tl_res = mfsm::type_list<>;
+    using tl_rem = decltype(mfsm::remove<int>(tl{}));
+    static_assert(std::is_same_v<tl_res, tl_rem>);
+  }
+  {
+    using tl = mfsm::type_list<double>;
+    using tl_res = mfsm::type_list<double>;
+    using tl_rem = decltype(mfsm::remove<int>(tl{}));
+    static_assert(std::is_same_v<tl_res, tl_rem>);
+  }
+  {
+    using tl = mfsm::type_list<s1, s2, s3, s4>;
+    using tl_res = mfsm::type_list<s1, s3>;
+    using tl_unique = decltype(mfsm::remove<s2>(mfsm::remove<s4>(tl{})));
+    static_assert(std::is_same_v<tl_res, tl_unique>);
+  }
+}
+
 BOOST_AUTO_TEST_SUITE_END()
