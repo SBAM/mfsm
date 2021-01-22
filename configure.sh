@@ -66,16 +66,19 @@ function invoke_cmake
   cmake_config $DEBUGDIR \
                -DCMAKE_BUILD_TYPE=Debug \
                -DCMAKE_TOOLCHAIN_FILE:string=$TOOLCHAIN_FILE \
+               -DCMAKE_INSTALL_PREFIX=$CMAKE_INSTALL_PREFIX \
                $@
   cmake_config $RELEASEDIR \
                -DCMAKE_BUILD_TYPE=Release \
                -DCMAKE_TOOLCHAIN_FILE:string=$TOOLCHAIN_FILE \
+               -DCMAKE_INSTALL_PREFIX=$CMAKE_INSTALL_PREFIX \
                $@
 }
 
 USAGE_STR=\
 "usage: $0 \
 [-c|--compiler <gcc|clang>] \
+[-p|--prefix <install_path>] \
 [-h|--help]"
 
 function usage_die()
@@ -92,8 +95,8 @@ function usage_help()
 
 GETOPT_CMD=\
 $(getopt \
-    -o c:h \
-    -l compiler:,help \
+    -o c:p:h \
+    -l compiler:,prefix:,help \
     -n $0 -- $@)
 
 if [ $? -ne 0 ]; then
@@ -107,6 +110,8 @@ while true; do
         gcc|clang) COMPILER=$2 ;;
         *) usage_die ;;
       esac; shift 2 ;;
+    -p|--prefix)
+      export CMAKE_INSTALL_PREFIX=$2; shift 2 ;;
     -h|--help) usage_help ;;
     *) break ;;
   esac
