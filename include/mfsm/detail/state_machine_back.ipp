@@ -3,7 +3,7 @@ namespace mfsm
 
   template <ValidStateMachineDefinition_c T>
   template <typename... Args>
-  state_machine<T>::state_machine(Args&&... args) :
+  state_machine_back<T>::state_machine_back(Args&&... args) :
     T(std::forward<Args>(args)...),
     state_(reverse_get<initial_state>(states_tl{}))
   {
@@ -12,7 +12,7 @@ namespace mfsm
 
   template <ValidStateMachineDefinition_c T>
   template <typename EVT>
-  void state_machine<T>::process_event(EVT&& evt)
+  void state_machine_back<T>::process_event(EVT&& evt)
   {
     using evt_t = std::remove_cvref_t<EVT>;
     using flt_t = decltype(filter_by_event<evt_t>(rows_tl{}));
@@ -28,7 +28,7 @@ namespace mfsm
 
   template <ValidStateMachineDefinition_c T>
   template <Type_list_c TL, typename EVT>
-  bool state_machine<T>::match_event(EVT&& evt)
+  bool state_machine_back<T>::match_event(EVT&& evt)
   {
     using evt_t = std::remove_cvref_t<EVT>;
     using row_t = typename decltype(front(TL{}))::type;
@@ -58,7 +58,7 @@ namespace mfsm
 
   template <ValidStateMachineDefinition_c T>
   template <Row_c R, typename EVT>
-  bool state_machine<T>::invoke_or_defer_action(EVT&& evt)
+  bool state_machine_back<T>::invoke_or_defer_action(EVT&& evt)
   {
     if constexpr (std::is_same_v<typename R::action_t, defer>)
       /// @note next state is ignored when event is deferred
@@ -77,7 +77,7 @@ namespace mfsm
 
   template <ValidStateMachineDefinition_c T>
   template <Row_c R, typename EVT>
-  bool state_machine<T>::invoke_guard(const EVT& evt)
+  bool state_machine_back<T>::invoke_guard(const EVT& evt)
   {
     typename R::start_t s{};
     typename R::next_t n{};
@@ -87,7 +87,7 @@ namespace mfsm
 
 
   template <ValidStateMachineDefinition_c T>
-  bool state_machine<T>::process_event_deferred()
+  bool state_machine_back<T>::process_event_deferred()
   {
     auto result = std::visit
       ([this]<typename EVT>(EVT&& evt) -> bool
@@ -104,7 +104,7 @@ namespace mfsm
 
   template <ValidStateMachineDefinition_c T>
   template <Type_list_c TL, typename EVT>
-  bool state_machine<T>::match_deferred_event(EVT&& evt)
+  bool state_machine_back<T>::match_deferred_event(EVT&& evt)
   {
     using row_t = typename decltype(front(TL{}))::type;
     using start_t = typename row_t::start_t;
@@ -129,7 +129,7 @@ namespace mfsm
 
   template <ValidStateMachineDefinition_c T>
   template <Row_c R, typename EVT>
-  bool state_machine<T>::invoke_action(EVT&& evt)
+  bool state_machine_back<T>::invoke_action(EVT&& evt)
   {
     if constexpr (std::is_same_v<typename R::action_t, defer>)
       return false;
@@ -146,10 +146,21 @@ namespace mfsm
 
 
   template <ValidStateMachineDefinition_c T>
-  inline std::size_t state_machine<T>::get_state() const
+  inline std::size_t state_machine_back<T>::get_state() const
   {
     return state_;
   }
 
-} // !namespace mfsm
 
+  template <ValidStateMachineDefinition_c T>
+  inline void state_machine_back<T>::reset_state()
+  {
+    state_ = reverse_get<initial_state>(states_tl{});
+    if constexpr (transition_table_t::has_defer_v)
+    {
+      typename dq_t::queue_t empty_queue;
+      dq_t::queue_.swap(empty_queue);
+    }
+  }
+
+} // !namespace mfsm

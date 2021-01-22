@@ -5,7 +5,7 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/test/tools/output_test_stream.hpp>
 
-#include <mfsm/detail/state_machine.hpp>
+#include <mfsm/state_machine.hpp>
 
 namespace but = boost::unit_test;
 
@@ -14,7 +14,7 @@ struct evt2 {};
 struct evt3
 {
   bool g_;
-  evt3(bool g) : g_(g) {}
+  explicit evt3(bool g) : g_(g) {}
   evt3(evt3&&) = default;
   evt3(const evt3&) = delete;
   evt3& operator=(const evt3&) = delete;
@@ -115,6 +115,7 @@ BOOST_AUTO_TEST_CASE(valid_definition)
 BOOST_AUTO_TEST_CASE(state_machine_initialization)
 {
   auto tmp = mfsm::state_machine<sm_1>(42);
+  std::cout << "sizeof(state_machine<sm_1>)=" << sizeof(tmp) << std::endl;
   BOOST_CHECK_EQUAL(tmp.get_state(), 0);
   BOOST_CHECK_EQUAL(tmp.i_, 42);
   auto tmp2 = std::move(tmp);
@@ -134,6 +135,7 @@ BOOST_AUTO_TEST_CASE(process_event_no_guard)
 BOOST_AUTO_TEST_CASE(process_event_defer_and_guard)
 {
   mfsm::state_machine<sm_2> tmp{};
+  std::cout << "sizeof(state_machine<sm_2>)=" << sizeof(tmp) << std::endl;
   auto check = [&](int a, int b, int c, int d)
     {
       BOOST_CHECK_EQUAL(tmp.tran_1_2_, a);
@@ -161,6 +163,8 @@ BOOST_AUTO_TEST_CASE(process_event_defer_and_guard)
   check(3, 2, 2, 1);
   tmp.process_event(evt2{});
   check(4, 2, 2, 1);
+  tmp.reset_state();
+  BOOST_CHECK_EQUAL(tmp.get_state(), 0);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

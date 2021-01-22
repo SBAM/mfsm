@@ -5,7 +5,7 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/test/tools/output_test_stream.hpp>
 
-#include <mfsm/detail/state_machine.hpp>
+#include <mfsm/detail/transition_table.hpp>
 
 namespace but = boost::unit_test;
 

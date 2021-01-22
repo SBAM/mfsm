@@ -15,7 +15,11 @@ namespace mfsm
    * @tparam G guard functor type
    * @brief Wraps a transition table row
    */
-  template <typename S, typename E, typename N, typename A, typename G>
+  template <std::default_initializable S,
+            std::move_constructible E,
+            std::default_initializable N,
+            typename A,
+            typename G>
   struct row
   {
     using start_t = S;
