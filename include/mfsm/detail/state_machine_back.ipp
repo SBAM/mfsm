@@ -65,10 +65,13 @@ namespace mfsm
       dq_t::queue_.push(std::forward<EVT>(evt));
     else
     {
-      typename R::start_t s{};
-      typename R::next_t n{};
-      typename R::action_t a{};
-      a(std::forward<EVT>(evt), *this, s, n);
+      if constexpr (!std::is_same_v<typename R::action_t, none>)
+      {
+        typename R::start_t s{};
+        typename R::next_t n{};
+        typename R::action_t a{};
+        a(std::forward<EVT>(evt), *this, s, n);
+      }
       state_ = reverse_get<typename R::next_t>(states_tl{});
     }
     return !std::is_same_v<typename R::action_t, defer>;
@@ -135,10 +138,13 @@ namespace mfsm
       return false;
     else
     {
-      typename R::start_t s{};
-      typename R::next_t n{};
-      typename R::action_t a{};
-      a(std::forward<EVT>(evt), *this, s, n);
+      if constexpr (!std::is_same_v<typename R::action_t, none>)
+      {
+        typename R::start_t s{};
+        typename R::next_t n{};
+        typename R::action_t a{};
+        a(std::forward<EVT>(evt), *this, s, n);
+      }
       state_ = reverse_get<typename R::next_t>(states_tl{});
       return true;
     }

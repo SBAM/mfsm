@@ -45,7 +45,8 @@ namespace mfsm
   /// @brief Concept for a row's action
   template <typename R, typename SM>
   concept Row_action_c = Row_c<R> &&
-    (std::same_as<typename R::action_t, defer> ||
+    (std::same_as<typename R::action_t, none> ||
+     std::same_as<typename R::action_t, defer> ||
      requires (typename R::start_t start,
                typename R::event_t event,
                typename R::next_t next,
