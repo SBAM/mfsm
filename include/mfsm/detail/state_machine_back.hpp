@@ -94,7 +94,6 @@ namespace mfsm
 
   private:
     std::size_t state_; ///< current state
-    static_assert(transition_table_t::template is_valid<sm_t>());
   };
 
 } // !namespace mfsm

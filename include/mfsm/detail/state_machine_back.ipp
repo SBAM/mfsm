@@ -67,6 +67,7 @@ namespace mfsm
     {
       if constexpr (!std::is_same_v<typename R::action_t, none>)
       {
+        static_assert(Row_action_c<R, sm_t>, "row's action cannot be invoked");
         typename R::start_t s{};
         typename R::next_t n{};
         typename R::action_t a{};
@@ -82,6 +83,7 @@ namespace mfsm
   template <Row_c R, typename EVT>
   bool state_machine_back<T>::invoke_guard(const EVT& evt)
   {
+    static_assert(Row_guard_c<R, sm_t>, "row's guard cannot be invoked");
     typename R::start_t s{};
     typename R::next_t n{};
     typename R::guard_t g{};
@@ -140,6 +142,7 @@ namespace mfsm
     {
       if constexpr (!std::is_same_v<typename R::action_t, none>)
       {
+        static_assert(Row_action_c<R, sm_t>, "row's action cannot be invoked");
         typename R::start_t s{};
         typename R::next_t n{};
         typename R::action_t a{};

@@ -7,10 +7,6 @@ project(mfsm
 message(STATUS "cmake toolchain file = ${CMAKE_TOOLCHAIN_FILE}")
 
 # expose GNU standard installation directories
-set(CMAKE_INSTALL_DEFAULT_DIRECTORY_PERMISSIONS
-  OWNER_READ OWNER_WRITE OWNER_EXECUTE
-  GROUP_READ GROUP_EXECUTE
-  WORLD_READ WORLD_EXECUTE)
 include(GNUInstallDirs OPTIONAL)
 message(STATUS "install_full_includedir=${CMAKE_INSTALL_FULL_INCLUDEDIR}")
 

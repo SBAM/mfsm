@@ -51,7 +51,7 @@ namespace mfsm
         else
           return type_list<>{};
       };
-    return (filter(Rs{}) + ... + type_list<>{});
+    return (filter(Rs{}) + ...);
   }
 
 } // !namespace mfsm

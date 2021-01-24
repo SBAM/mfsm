@@ -61,7 +61,6 @@ BOOST_AUTO_TEST_CASE(action_invokable)
   static_assert(mfsm::Row_action_c<r1, dummy>);
   static_assert(mfsm::Row_action_c<r2, int>);
   static_assert(mfsm::Row_action_c<r2, dummy>);
-  static_assert(ttt::is_valid<int>());
 }
 
 BOOST_AUTO_TEST_CASE(defer_utilities)

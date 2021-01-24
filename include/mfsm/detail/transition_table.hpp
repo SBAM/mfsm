@@ -22,10 +22,6 @@ namespace mfsm
     using events_var = decltype(make_variant_events<Rs...>());
     /// @return true if a defer queue is needed to manage this transition_table
     static constexpr bool has_defer_v = has_defer<Rs...>();
-
-    /// @return true if all rows' actions & guards are valid
-    template <typename SM>
-    static consteval bool is_valid();
   };
 
 
@@ -42,7 +38,5 @@ namespace mfsm
   concept TransitionTable_c = is_transition_table_v<T>;
 
 } // !namespace mfsm
-
-# include "transition_table.ipp"
 
 #endif // !MFSM_DETAIL_TRANSITION_TABLE_HPP_
