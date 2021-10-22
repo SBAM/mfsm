@@ -25,7 +25,7 @@ namespace mfsm
 
 
   template <Row_c... Rs>
-  constexpr auto make_variant_events()
+  consteval auto make_variant_events()
   {
     if constexpr (has_defer<Rs...>())
     {

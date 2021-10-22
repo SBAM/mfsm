@@ -95,10 +95,9 @@ namespace mfsm
    * @tparam Rs rows list
    * @return a variant with all possible events
    * @note This variant wraps deferred events that can be queued
-   * @todo revert to consteval once its clang implementation is complete
    */
   template <Row_c... Rs>
-  constexpr auto make_variant_events();
+  consteval auto make_variant_events();
 
   /**
    * @tparam EVT event type used as filter

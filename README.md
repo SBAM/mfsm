@@ -1,6 +1,6 @@
 # mfsm
-This header-only library is heavily inspired by [boost MSM](https://www.boost.org/doc/libs/1_75_0/libs/msm/doc/HTML/index.html) and mimics how it defines its _transition tables_.
-Only a subset of its features are implemented.
+This header-only library is inspired by [boost MSM](https://www.boost.org/doc/libs/1_77_0/libs/msm/doc/HTML/index.html) and copies how it defines its _transition tables_.
+Only a subset of Boost.MSM features are implemented.
 
 ## Overview of differences
 * requires a c++20 compiler
@@ -16,7 +16,7 @@ Only a subset of its features are implemented.
 * [cmake](https://cmake.org/)
 * [boost](https://www.boost.org/) (optional, required for unit-tests)
 
-> Fedora 33 setup
+> Fedora setup
 ```shell
 $ dnf install cmake gcc-c++ boost-devel
 ```
@@ -25,12 +25,12 @@ $ dnf install cmake gcc-c++ boost-devel
 ```console
 user@mach:~$ git clone https://github.com/SBAM/mfsm.git
 user@mach:~$ cd mfsm
-user@mach:~$ ./configure.sh --prefix [...]
+user@mach:~$ ./configure.sh --prefix <install_directory>
 user@mach:~$ make -C build/Release tests install
 ```
 
 ## Use in a CMake project
-* add `[...install path...]/lib(64)/cmake` to `CMAKE_PREFIX_PATH`
+* add `<install_directory>/lib(64)/cmake` to `CMAKE_PREFIX_PATH`
 * add to _CMakeLists.txt_ `find_package(mfsm REQUIRED)`
 * this exposes a target `mfsm::mfsm` that can be linked to a library
 
