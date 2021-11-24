@@ -17,3 +17,8 @@ class MfsmConan(ConanFile):
 
   def package_id(self):
     self.info.header_only()
+
+  def package_info(self):
+    self.cpp_info.names["cmake_find_package"] = "mfsm"
+    self.cpp_info.names["cmake_find_package_multi"] = "mfsm"
+    self.cpp_info.names["pkg_config"] = "mfsm"
