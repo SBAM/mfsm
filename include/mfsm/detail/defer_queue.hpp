@@ -1,7 +1,7 @@
 #ifndef MFSM_DETAIL_DEFER_QUEUE_HPP_
 # define MFSM_DETAIL_DEFER_QUEUE_HPP_
 
-# include <queue>
+# include <vector>
 
 # include "transition_table.hpp"
 
@@ -19,7 +19,7 @@ namespace mfsm
   {
   protected:
     /// Shorthand to events variant queue
-    using queue_t = std::queue<typename T::events_var>;
+    using queue_t = std::vector<typename T::events_var>;
     queue_t queue_; ///< deferred events storage
   };
 

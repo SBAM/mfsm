@@ -16,6 +16,7 @@ struct evt3
   bool g_;
   explicit evt3(bool g) : g_(g) {}
   evt3(evt3&&) = default;
+  evt3& operator=(evt3&&) = default;
   evt3(const evt3&) = delete;
   evt3& operator=(const evt3&) = delete;
 };

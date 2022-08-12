@@ -62,7 +62,7 @@ namespace mfsm
   {
     if constexpr (std::is_same_v<typename R::action_t, defer>)
       /// @note next state is ignored when event is deferred
-      dq_t::queue_.push(std::forward<EVT>(evt));
+      dq_t::queue_.push_back(std::forward<EVT>(evt));
     else
     {
       if constexpr (!std::is_same_v<typename R::action_t, none>)
@@ -102,7 +102,7 @@ namespace mfsm
          return this->match_deferred_event<flt_t>(std::forward<EVT>(evt));
        }, dq_t::queue_.front());
     if (result)
-      dq_t::queue_.pop();
+      dq_t::queue_.erase(dq_t::queue_.begin());
     return result;
   }
 
