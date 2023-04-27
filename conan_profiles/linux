@@ -1,0 +1,10 @@
+{% set common_tc = os.path.join(profile_dir, "CommonToolchain.cmake") %}
+
+[settings]
+arch=x86_64
+os=Linux
+# always use conancenter's cmake in Release mode
+cmake:build_type=Release
+
+[conf]
+tools.cmake.cmaketoolchain:user_toolchain+={{ common_tc }}
