@@ -1,5 +1,5 @@
 # mfsm
-This header-only library is inspired by [boost MSM](https://www.boost.org/doc/libs/1_77_0/libs/msm/doc/HTML/index.html) and copies how it defines its _transition tables_.
+This header-only library is inspired by [boost MSM](https://www.boost.org/doc/libs/1_82_0/libs/msm/doc/HTML/index.html) and copies how it defines its _transition tables_.
 Only a subset of Boost.MSM features are implemented.
 
 ## Overview of differences
@@ -13,26 +13,20 @@ Only a subset of Boost.MSM features are implemented.
 
 ## Dependencies
 * cxx20 compiler such as [g++](https://gcc.gnu.org/) or [clang++](https://clang.llvm.org/)
-* [cmake](https://cmake.org/)
-* [boost](https://www.boost.org/) (optional, required for unit-tests)
+* [boost](https://www.boost.org/) (required for unit-tests)
 
 > Fedora setup
 ```shell
-$ dnf install cmake gcc-c++ boost-devel
+$ dnf install conan cmake gcc-c++
 ```
 
 ## Build and install
 ```console
 user@mach:~$ git clone https://github.com/SBAM/mfsm.git
 user@mach:~$ cd mfsm
-user@mach:~$ ./configure.sh --prefix <install_directory>
-user@mach:~$ make -C build/Release tests install
+user@mach:~$ ./test.sh
+user@mach:~$ conan upload -r <my_remote> mfsm/1.2
 ```
-
-## Use in a CMake project
-* add `<install_directory>/lib(64)/cmake` to `CMAKE_PREFIX_PATH`
-* add to _CMakeLists.txt_ `find_package(mfsm REQUIRED)`
-* this exposes a target `mfsm::mfsm` that can be linked to a library
 
 ## Interface overview
 ```cpp
