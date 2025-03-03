@@ -1,4 +1,4 @@
-#! env bash
+#! /bin/bash
 
 TPUTRESET=$(tput sgr0 2> /dev/null)
 GREEN=$(tput setaf 2 2> /dev/null)
