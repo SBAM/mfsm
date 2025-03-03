@@ -2,10 +2,12 @@
 
 [settings]
 compiler=clang
-compiler.cppstd=20
+compiler.cppstd=23
 compiler.libcxx=libc++
-compiler.version=16
+compiler.version=19
 
 [conf]
 tools.build:compiler_executables={'c': '/usr/bin/clang', 'cpp': '/usr/bin/clang++'}
+tools.build:exelinkflags+=['-fuse-ld=lld', '-rtlib=compiler-rt', '-unwindlib=libunwind']
+tools.build:sharedlinkflags+=['-fuse-ld=lld']
 tools.cmake.cmaketoolchain:user_toolchain+={{ clang_tc }}

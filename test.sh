@@ -4,7 +4,6 @@ TPUTRESET=$(tput sgr0 2> /dev/null)
 GREEN=$(tput setaf 2 2> /dev/null)
 GREY=$(tput setaf 7 2> /dev/null)
 RED=$(tput setaf 9 2> /dev/null)
-YELLOW=$(tput setaf 11 2> /dev/null)
 
 function green_echo
 {
@@ -24,7 +23,7 @@ function red_echo
 SCRIPT_LOCATION=$(readlink -f $0)
 BASEDIR=$(dirname $SCRIPT_LOCATION)
 
-COMPILER=gcc
+COMPILER=clang
 
 function invoke_conan_build
 {
@@ -57,7 +56,7 @@ function invoke_conan
   invoke_conan_build "Release" "$profs_h" "$profs_b"
 }
 
-USAGE_STR="usage: $0 [-c|--compiler <gcc|clang>] [-h|--help]"
+USAGE_STR="usage: $0 [-c|--compiler <clang|gcc>] [-h|--help]"
 
 function usage_die()
 {
@@ -85,7 +84,7 @@ while true; do
   case $1 in
     -c|--compiler)
       case $2 in
-        gcc|clang) COMPILER=$2 ;;
+        clang|gcc) COMPILER=$2 ;;
         *) usage_die ;;
       esac; shift 2 ;;
     -h|--help) usage_help ;;

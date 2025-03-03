@@ -1,9 +1,6 @@
 #define BOOST_TEST_MODULE mfsm
 
-#include <iostream>
-
 #include <boost/test/unit_test.hpp>
-#include <boost/test/tools/output_test_stream.hpp>
 
 #include <mfsm/detail/transition_table.hpp>
 
@@ -50,7 +47,7 @@ BOOST_AUTO_TEST_CASE(type_filtering)
   }
   {
     using flt_t = decltype(mfsm::filter_by_event<int>(ttt::rows_tl{}));
-    static_assert(mfsm::length(flt_t{}) == 0);
+    static_assert(mfsm::length(flt_t{}) == 0uz);
     static_assert(std::is_same_v<flt_t, mfsm::type_list<>>);
   }
 }

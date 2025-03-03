@@ -3,9 +3,9 @@
 
 [settings]
 compiler=gcc
-compiler.cppstd=20
+compiler.cppstd=23
 compiler.libcxx=libstdc++11
-compiler.version=13
+compiler.version=14
 
 [conf]
 tools.build:compiler_executables={'c': '/usr/bin/gcc', 'cpp': '/usr/bin/g++'}

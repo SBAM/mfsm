@@ -56,17 +56,17 @@ namespace mfsm
      *        initialized using T::initial_state.
      */
     template <typename... Args>
-    state_machine_back(Args&&... args);
+    state_machine_back(Args&&... args) noexcept;
 
     /// @param evt Event to process
     template <typename EVT>
     void process_event(EVT&& evt);
 
     /// @return current state
-    inline std::size_t get_state() const;
+    inline std::size_t get_state() const noexcept;
 
     /// @brief Resets internal state to initial value and clears defer queue
-    inline void reset_state();
+    inline void reset_state() noexcept;
 
   private:
     /// @return true if processing was successful (queue can be popped)

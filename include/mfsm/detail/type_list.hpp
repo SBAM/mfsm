@@ -57,7 +57,7 @@ namespace mfsm
   consteval auto get(type_list<Ts...>);
 
   /// @return SEARCHED_T's index from given type_list
-  template <typename SEARCHED_T, Type_list_c TL, std::size_t N = 0>
+  template <typename SEARCHED_T, Type_list_c TL, std::size_t N = 0uz>
   consteval std::size_t reverse_get(TL);
 
   /// @return concatenation of two types lists

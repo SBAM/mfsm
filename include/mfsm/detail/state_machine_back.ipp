@@ -3,7 +3,7 @@ namespace mfsm
 
   template <ValidStateMachineDefinition_c T>
   template <typename... Args>
-  state_machine_back<T>::state_machine_back(Args&&... args) :
+  state_machine_back<T>::state_machine_back(Args&&... args) noexcept :
     T(std::forward<Args>(args)...),
     state_(reverse_get<initial_state>(states_tl{}))
   {
@@ -16,7 +16,7 @@ namespace mfsm
   {
     using evt_t = std::remove_cvref_t<EVT>;
     using flt_t = decltype(filter_by_event<evt_t>(rows_tl{}));
-    static_assert(length(flt_t{}) > 0, "unhandled event");
+    static_assert(length(flt_t{}) > 0uz, "unhandled event");
     auto match_res = match_event<flt_t>(std::forward<EVT>(evt));
     if constexpr (transition_table_t::has_defer_v)
     {
@@ -31,7 +31,7 @@ namespace mfsm
   bool state_machine_back<T>::match_event(EVT&& evt)
   {
     using evt_t = std::remove_cvref_t<EVT>;
-    using row_t = typename decltype(front(TL{}))::type;
+    using row_t = decltype(front(TL{}))::type;
     using start_t = typename row_t::start_t;
     constexpr auto start_idx = reverse_get<start_t>(states_tl{});
     if (state_ == start_idx)
@@ -42,7 +42,7 @@ namespace mfsm
         if (invoke_guard<row_t>(evt))
           return invoke_or_defer_action<row_t>(std::forward<EVT>(evt));
     }
-    if constexpr (length(TL{}) == 1)
+    if constexpr (length(TL{}) == 1uz)
     {
       if constexpr (Has_no_transition_c<sm_t, evt_t>)
         T::no_transition(std::forward<EVT>(evt), state_);
@@ -111,7 +111,7 @@ namespace mfsm
   template <Type_list_c TL, typename EVT>
   bool state_machine_back<T>::match_deferred_event(EVT&& evt)
   {
-    using row_t = typename decltype(front(TL{}))::type;
+    using row_t = decltype(front(TL{}))::type;
     using start_t = typename row_t::start_t;
     constexpr auto start_idx = reverse_get<start_t>(states_tl{});
     if (state_ == start_idx)
@@ -122,7 +122,7 @@ namespace mfsm
         if (invoke_guard<row_t>(evt))
           return invoke_action<row_t>(std::forward<EVT>(evt));
     }
-    if constexpr (length(TL{}) == 1)
+    if constexpr (length(TL{}) == 1uz)
       return false;
     else
     {
@@ -155,21 +155,18 @@ namespace mfsm
 
 
   template <ValidStateMachineDefinition_c T>
-  inline std::size_t state_machine_back<T>::get_state() const
+  inline std::size_t state_machine_back<T>::get_state() const noexcept
   {
     return state_;
   }
 
 
   template <ValidStateMachineDefinition_c T>
-  inline void state_machine_back<T>::reset_state()
+  inline void state_machine_back<T>::reset_state() noexcept
   {
     state_ = reverse_get<initial_state>(states_tl{});
     if constexpr (transition_table_t::has_defer_v)
-    {
-      typename dq_t::queue_t empty_queue;
-      dq_t::queue_.swap(empty_queue);
-    }
+      dq_t::queue_.clear();
   }
 
 } // !namespace mfsm

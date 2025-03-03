@@ -1,9 +1,6 @@
 #define BOOST_TEST_MODULE mfsm
 
-#include <iostream>
-
 #include <boost/test/unit_test.hpp>
-#include <boost/test/tools/output_test_stream.hpp>
 
 #include <mfsm/detail/type_list.hpp>
 
@@ -29,13 +26,13 @@ BOOST_AUTO_TEST_CASE(test_has_type)
 BOOST_AUTO_TEST_CASE(test_length)
 {
   using tl1_t = mfsm::type_list<>;
-  static_assert(mfsm::length(tl1_t{}) == 0);
+  static_assert(mfsm::length(tl1_t{}) == 0uz);
   using tl2_t = mfsm::type_list<s1>;
-  static_assert(mfsm::length(tl2_t{}) == 1);
+  static_assert(mfsm::length(tl2_t{}) == 1uz);
   using tl3_t = mfsm::type_list<s1, s2>;
-  static_assert(mfsm::length(tl3_t{}) == 2);
+  static_assert(mfsm::length(tl3_t{}) == 2uz);
   using tl4_t = mfsm::type_list<s1, s2, s3>;
-  static_assert(mfsm::length(tl4_t{}) == 3);
+  static_assert(mfsm::length(tl4_t{}) == 3uz);
 }
 
 
@@ -84,10 +81,10 @@ BOOST_AUTO_TEST_CASE(test_get)
 BOOST_AUTO_TEST_CASE(test_reverse_get)
 {
   using tl_t = mfsm::type_list<s1, s2, s3, s4, s1, s2, s3, s4>;
-  static_assert(mfsm::reverse_get<s1>(tl_t{}) == 0);
-  static_assert(mfsm::reverse_get<s2>(tl_t{}) == 1);
-  static_assert(mfsm::reverse_get<s3>(tl_t{}) == 2);
-  static_assert(mfsm::reverse_get<s4>(tl_t{}) == 3);
+  static_assert(mfsm::reverse_get<s1>(tl_t{}) == 0uz);
+  static_assert(mfsm::reverse_get<s2>(tl_t{}) == 1uz);
+  static_assert(mfsm::reverse_get<s3>(tl_t{}) == 2uz);
+  static_assert(mfsm::reverse_get<s4>(tl_t{}) == 3uz);
 }
 
 

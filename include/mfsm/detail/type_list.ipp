@@ -41,7 +41,7 @@ namespace mfsm
   template <typename HEAD, typename... TAIL>
   consteval auto back(type_list<HEAD, TAIL...>)
   {
-    if constexpr (sizeof...(TAIL) == 0)
+    if constexpr (sizeof...(TAIL) == 0uz)
     {
       struct res_t
       {
@@ -57,7 +57,7 @@ namespace mfsm
   template <typename HEAD, typename... TAIL>
   consteval auto pop_back(type_list<HEAD, TAIL...>)
   {
-    if constexpr (sizeof...(TAIL) == 0)
+    if constexpr (sizeof...(TAIL) == 0uz)
       return type_list<>{};
     else
       return type_list<HEAD>{} + pop_back(type_list<TAIL...>{});
@@ -68,10 +68,10 @@ namespace mfsm
   consteval auto get(type_list<Ts...>)
   {
     static_assert(sizeof...(Ts) > N);
-    if constexpr (N == 0)
+    if constexpr (N == 0uz)
       return front(type_list<Ts...>{});
     else
-      return get<N - 1>(pop_front(type_list<Ts...>{}));
+      return get<N - 1uz>(pop_front(type_list<Ts...>{}));
   }
 
 
@@ -79,13 +79,13 @@ namespace mfsm
   consteval std::size_t reverse_get(TL)
   {
     using s_t = std::remove_cvref_t<SEARCHED_T>;
-    using f_t = typename decltype(front(TL{}))::type;
+    using f_t = decltype(front(TL{}))::type;
     if constexpr (std::is_same_v<s_t, f_t>)
       return N;
     else
     {
       using pf_t = decltype(pop_front(TL{}));
-      return reverse_get<s_t, pf_t, N + 1>(pf_t{});
+      return reverse_get<s_t, pf_t, N + 1uz>(pf_t{});
     }
   }
 
@@ -100,12 +100,12 @@ namespace mfsm
   template <typename... Ts>
   consteval auto unique(type_list<Ts...>)
   {
-    if constexpr (sizeof...(Ts) <= 1)
+    if constexpr (sizeof...(Ts) <= 1uz)
       return type_list<Ts...>{};
     else
     {
       using pb_t = decltype(pop_back(type_list<Ts...>{}));
-      using b_t = typename decltype(back(type_list<Ts...>{}))::type;
+      using b_t = decltype(back(type_list<Ts...>{}))::type;
       if constexpr (has_type<b_t, pb_t>())
         return unique(pb_t{});
       else
@@ -117,7 +117,7 @@ namespace mfsm
   template <typename REM_T, typename... Ts>
   consteval auto remove(type_list<Ts...>)
   {
-    if constexpr (sizeof...(Ts) == 0)
+    if constexpr (sizeof...(Ts) == 0uz)
       return type_list<>{};
     else
     {

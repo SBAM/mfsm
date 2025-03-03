@@ -1,9 +1,9 @@
 # mfsm
-This header-only library is inspired by [boost MSM](https://www.boost.org/doc/libs/1_82_0/libs/msm/doc/HTML/index.html) and copies how it defines its _transition tables_.
+This header-only library is inspired by [boost MSM](https://www.boost.org/doc/libs/1_87_0/libs/msm/doc/HTML/index.html) and copies how it defines its _transition tables_.
 Only a subset of Boost.MSM features are implemented.
 
 ## Overview of differences
-* requires a c++20 compiler
+* requires a c++23 compiler
 * many compile-time checks using concepts
 * removes 5 arguments limitation on state-machine constructor
 * removes _transition table_ limitations due to boost MPL vector/map size
@@ -12,20 +12,16 @@ Only a subset of Boost.MSM features are implemented.
 * auto-detects if deferred events are used
 
 ## Dependencies
-* cxx20 compiler such as [g++](https://gcc.gnu.org/) or [clang++](https://clang.llvm.org/)
+* c++23 compiler such as [clang++](https://clang.llvm.org/) or [g++](https://gcc.gnu.org/)
 * [boost](https://www.boost.org/) (required for unit-tests)
-
-> Fedora setup
-```shell
-$ dnf install conan cmake gcc-c++
-```
+* [python](https://www.python.org/) (required for conan build)
 
 ## Build and install
 ```console
 user@mach:~$ git clone https://github.com/SBAM/mfsm.git
 user@mach:~$ cd mfsm
 user@mach:~$ ./test.sh
-user@mach:~$ conan upload -r <my_remote> mfsm/1.2
+user@mach:~$ conan upload -r <my_remote> mfsm/1.3
 ```
 
 ## Interface overview

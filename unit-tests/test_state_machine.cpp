@@ -1,9 +1,8 @@
 #define BOOST_TEST_MODULE mfsm
 
-#include <iostream>
+#include <print>
 
 #include <boost/test/unit_test.hpp>
-#include <boost/test/tools/output_test_stream.hpp>
 
 #include <mfsm/state_machine.hpp>
 
@@ -59,7 +58,7 @@ struct track
   template <typename EVT3, typename SM, typename N>
   void operator()(EVT3&& evt, SM& sm, state2, N)
   {
-    std::cout << "evt3.g_=" << std::boolalpha << evt.g_ << std::endl;
+    std::println("evt3.g_={:s}", evt.g_);
     if (!evt.g_)
       ++sm.tran_2_2_;
   }
@@ -86,12 +85,12 @@ struct not_guard
 struct sm_2
 {
   using transition_table_t = mfsm::transition_table<
-    mfsm::row<state1, evt2, state2, track, mfsm::none>,
+    mfsm::row<state1, evt2, state2,     track,       mfsm::none>,
     mfsm::row<state1, evt1, mfsm::none, mfsm::defer, mfsm::none>,
-    mfsm::row<state2, evt1, state1, track, mfsm::none>,
+    mfsm::row<state2, evt1, state1,     track,       mfsm::none>,
     mfsm::row<state2, evt2, mfsm::none, mfsm::defer, mfsm::none>,
-    mfsm::row<state2, evt3, state1, track, guard>,
-    mfsm::row<state2, evt3, state2, track, not_guard>
+    mfsm::row<state2, evt3, state1,     track,       guard>,
+    mfsm::row<state2, evt3, state2,     track,       not_guard>
     >;
   using initial_state = state1;
   template <typename EVT>
@@ -116,11 +115,11 @@ BOOST_AUTO_TEST_CASE(valid_definition)
 BOOST_AUTO_TEST_CASE(state_machine_initialization)
 {
   auto tmp = mfsm::state_machine<sm_1>(42);
-  std::cout << "sizeof(state_machine<sm_1>)=" << sizeof(tmp) << std::endl;
-  BOOST_CHECK_EQUAL(tmp.get_state(), 0);
+  std::println("sizeof(state_machine<sm_1>)={}", sizeof(tmp));
+  BOOST_CHECK_EQUAL(tmp.get_state(), 0uz);
   BOOST_CHECK_EQUAL(tmp.i_, 42);
   auto tmp2 = std::move(tmp);
-  BOOST_CHECK_EQUAL(tmp2.get_state(), 0);
+  BOOST_CHECK_EQUAL(tmp2.get_state(), 0uz);
   BOOST_CHECK_EQUAL(tmp2.i_, 42);
 }
 
@@ -136,7 +135,7 @@ BOOST_AUTO_TEST_CASE(process_event_no_guard)
 BOOST_AUTO_TEST_CASE(process_event_defer_and_guard)
 {
   mfsm::state_machine<sm_2> tmp{};
-  std::cout << "sizeof(state_machine<sm_2>)=" << sizeof(tmp) << std::endl;
+  std::println("sizeof(state_machine<sm_2>)={}", sizeof(tmp));
   auto check = [&](int a, int b, int c, int d)
     {
       BOOST_CHECK_EQUAL(tmp.tran_1_2_, a);
@@ -165,7 +164,7 @@ BOOST_AUTO_TEST_CASE(process_event_defer_and_guard)
   tmp.process_event(evt2{});
   check(4, 2, 2, 1);
   tmp.reset_state();
-  BOOST_CHECK_EQUAL(tmp.get_state(), 0);
+  BOOST_CHECK_EQUAL(tmp.get_state(), 0uz);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

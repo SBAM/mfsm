@@ -1,0 +1,31 @@
+stages:
+  - upload_to_remote
+
+upload_to_remote_job:
+  image: gitlab-build-f41
+  stage: upload_to_remote
+  variables:
+    CONAN_HOME: "$CI_PROJECT_DIR/.conan2"
+  cache:
+    key: $CI_JOB_IMAGE
+    paths:
+      - .conan2
+      - venv
+  before_script:
+    - python3 -m venv ./venv
+    - source ./venv/bin/activate
+    - pip install --upgrade pip
+    - pip install --upgrade conan
+    - conan profile detect || true
+    - conan remote add conan_remote "$CONAN_REPOSITORY_URL" --force
+    - conan remote login conan_remote "$CONAN_LOGIN_USERNAME" --password "$CONAN_PASSWORD"
+  script:
+    - ./test.sh -c clang
+    - ./test.sh -c gcc
+    - conan upload -r conan_remote mfsm/1.3 --only-recipe --force --confirm
+  interruptible: true
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: never
+    - when: delayed
+      start_in: 10 seconds
